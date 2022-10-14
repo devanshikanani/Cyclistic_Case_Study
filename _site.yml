@@ -2,7 +2,9 @@ name: "Cyclistic Case Study"
 navbar:
   title: "Cyclistic Case Study"
   left:
-    - text: "Home"
+    - text: "Summary"
       href: index.html
+    - text: "Final Report"
+      href: Cyclistic-Case-Study.html
 
 output_dir: "docs"
