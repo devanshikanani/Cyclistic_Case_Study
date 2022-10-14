@@ -177,11 +177,8 @@
 <div class="page-content has-page-title">
 <div id="step-1-loading-data" class="section level2">
 <h2>Step 1: Loading Data</h2>
-<div
-id="install-and-load-the-packages-for-r.-then-import-all-of-the-months-files-for-the-past-year."
-class="section level3">
-<h3>Install and load the packages for R. Then import all of the month’s
-files for the past year.</h3>
+<p>Install and load the packages for R. Then import all of the month’s
+files for the past year.</p>
 <pre class="r"><code>#install.packages(&#39;plyr&#39;, repos = &quot;http://cran.us.r-project.org&quot;)
 #install.packages(&quot;contrib.url&quot;)
 #options(repos = list(CRAN=&quot;http://cran.rstudio.com/&quot;))
@@ -212,14 +209,10 @@ Jul22 &lt;- read_csv(&quot;202207-divvy-tripdata.csv&quot;)
 Aug22 &lt;- read_csv(&quot;202208-divvy-tripdata.csv&quot;)
 Sep22 &lt;- read_csv(&quot;202209-divvy-publictripdata.csv&quot;)</code></pre>
 </div>
-</div>
 <div id="step-2-combine-data" class="section level2">
 <h2>Step 2: Combine data</h2>
-<div
-id="compare-column-names-of-each-file.-i-hid-the-results-to-limit-clutter-of-the-reports-output."
-class="section level3">
-<h3>Compare column names of each file. I hid the results to limit
-clutter of the report’s output.</h3>
+<p>Compare column names of each file. I hid the results to limit clutter
+of the report’s output.</p>
 <pre class="r"><code>colnames(Oct21)
 colnames(Nov21)
 colnames(Dec21)
@@ -232,133 +225,118 @@ colnames(Jun22)
 colnames(Jul22)
 colnames(Aug22)
 colnames(Sep22)</code></pre>
-</div>
-<div id="inspect-the-data-frame" class="section level3">
-<h3>Inspect the data frame</h3>
+<p>Inspect the data frame</p>
 <pre class="r"><code>str(Oct21)</code></pre>
-</div>
-<div
-id="stack-individual-months-data-frames-into-one-big-data-frame.-i-commented-out-the-view-of-the-data-to-limit-clutter."
-class="section level3">
-<h3>Stack individual month’s data frames into one big data frame. I
-commented out the view of the data to limit clutter.</h3>
+<p>Stack individual month’s data frames into one big data frame. I
+commented out the view of the data to limit clutter.</p>
 <pre class="r"><code>all_trips &lt;- bind_rows(Oct21,Nov21, Dec21, Jan22, Feb22, Mar22, Apr22, May22, Jun22, Jul22, Aug22, Sep22)
 
 #View(all_trips)</code></pre>
 </div>
-</div>
 <div id="step-3-data-cleaning" class="section level2">
 <h2>Step 3: Data Cleaning</h2>
-<div id="inspect-the-new-table-that-has-been-created"
-class="section level3">
-<h3>Inspect the new table that has been created</h3>
+<p>Inspect the new table that has been created</p>
 <pre class="r"><code>colnames(all_trips)  #List of column names
 nrow(all_trips)  #How many rows are in data frame?
 dim(all_trips)  #Dimensions of the data frame?
 head(all_trips)  #See the first 6 rows of data frame.  Also tail(all_trips)
 str(all_trips)  #See list of columns and data types (numeric, character, etc)
 summary(all_trips)  #Statistical summary of data. Mainly for numerics</code></pre>
-</div>
-<div
-id="added-some-additional-columns-of-data-such-as-day-month-year-that-provide-additional-opportunities-to-aggregate-the-data."
-class="section level3">
-<h3>Added some additional columns of data, such as day, month, year,
-that provide additional opportunities to aggregate the data.</h3>
+<p>Added some additional columns of data, such as day, month, year, that
+provide additional opportunities to aggregate the data.</p>
 <pre class="r"><code>all_trips$date &lt;- as.Date(all_trips$started_at) #The default format is yyyy-mm-dd
 all_trips$month &lt;- format(as.Date(all_trips$date), &quot;%m&quot;)
 all_trips$day &lt;- format(as.Date(all_trips$date), &quot;%d&quot;)
 all_trips$year &lt;- format(as.Date(all_trips$date), &quot;%Y&quot;)
 all_trips$day_of_week &lt;- format(as.Date(all_trips$date), &quot;%A&quot;)</code></pre>
-</div>
-<div id="add-a-ride_length-calculation-to-all_trips-in-seconds"
-class="section level3">
-<h3>Add a “ride_length” calculation to all_trips (in seconds)</h3>
-</div>
-<div id="inspect-the-structure-of-the-columns" class="section level3">
-<h3>Inspect the structure of the columns</h3>
-</div>
-<div
-id="convert-ride_length-to-numeric-so-we-can-run-calculations-on-the-data.-first-lets-check-to-see-if-the-ride_lengths-columns-type-is-numeric."
-class="section level3">
-<h3>Convert “ride_length” to numeric so we can run calculations on the
+<p>Add a “ride_length” calculation to all_trips (in seconds)</p>
+<pre class="r"><code>all_trips$ride_length &lt;- difftime(all_trips$ended_at,all_trips$started_at)</code></pre>
+<p>Inspect the structure of the columns</p>
+<pre class="r"><code>str(all_trips)</code></pre>
+<p>Convert “ride_length” to numeric so we can run calculations on the
 data. First let’s check to see if the ride_length’s column’s type is
-numeric.</h3>
-</div>
-<div
-id="the-data-frame-includes-a-few-hundred-entries-when-bikes-were-taken-out-of-docks-and-checked-for-quality-by-divvy-or-ride_length-was-negative.-here-i-find-negative-ride-lengths.-i-have-commented-out-the-view-of-the-data-to-limit-the-clutter-of-the-report."
-class="section level3">
-<h3>The data frame includes a few hundred entries when bikes were taken
+numeric.</p>
+<pre class="r"><code>is.numeric(all_trips$ride_length)
+
+all_trips$ride_length &lt;- as.numeric(as.character(all_trips$ride_length))
+is.numeric(all_trips$ride_length)</code></pre>
+<p>The data frame includes a few hundred entries when bikes were taken
 out of docks and checked for quality by Divvy or ride_length was
 negative. Here I find negative ride lengths. I have commented out the
-view of the data to limit the clutter of the report.</h3>
-</div>
-<div
-id="as-you-can-see-there-are-108-instances-where-the-ride-lengths-have-been-negative-seconds.-i-will-delete-these-instances.-i-will-create-a-new-version-of-the-data-frame-v2-since-data-is-being-removed.-again-commenting-out-the-view-of-the-whole-data-frame."
-class="section level3">
-<h3>As you can see, there are 108 instances where the ride lengths have
+view of the data to limit the clutter of the report.</p>
+<pre class="r"><code>all_trips[all_trips$ride_length&lt;0, ]
+
+#View(all_trips[all_trips$ride_length&lt;0, ])
+
+nrow(all_trips[all_trips$ride_length&lt;0, ])</code></pre>
+<p>As you can see, there are 108 instances where the ride lengths have
 been negative seconds. I will delete these instances. I will create a
 new version of the data frame (v2) since data is being removed. Again,
-commenting out the view of the whole data frame.</h3>
-</div>
+commenting out the view of the whole data frame.</p>
+<pre class="r"><code>all_trips_v2 &lt;- all_trips[!(all_trips$ride_length&lt;0), ]
+
+#View(all_trips_v2)</code></pre>
 </div>
 <div id="step-4-analysis" class="section level2">
 <h2>Step 4: Analysis</h2>
-<div
-id="descriptive-analysis-on-ride_length-all-figures-in-seconds.-i-hid-the-results-of-the-following-code-chunk."
-class="section level3">
-<h3>Descriptive analysis on ride_length (all figures in seconds). I hid
-the results of the following code chunk.</h3>
+<p>Descriptive analysis on ride_length (all figures in seconds). I hid
+the results of the following code chunk.</p>
 <pre class="r"><code>mean(all_trips_v2$ride_length) #straight average (total ride length / rides)
 median(all_trips_v2$ride_length) #midpoint number in the ascending array of ride lengths
 max(all_trips_v2$ride_length) #longest ride
 min(all_trips_v2$ride_length) #shortest ride</code></pre>
-</div>
-<div
-id="the-summary-function-is-a-more-compact-way-of-getting-the-same-information-as-above."
-class="section level3">
-<h3>The summary function is a more compact way of getting the same
-information as above.</h3>
-</div>
-<div id="compare-members-and-casual-users" class="section level3">
-<h3>Compare members and casual users</h3>
-</div>
-<div
-id="see-the-average-ride-time-by-each-day-for-members-vs-casual-users"
-class="section level3">
-<h3>See the average ride time by each day for members vs casual
-users</h3>
-</div>
-<div
-id="notice-that-the-days-of-the-week-are-out-of-order.-here-i-sort-them."
-class="section level3">
-<h3>Notice that the days of the week are out of order. Here, I sort
-them.</h3>
-</div>
-<div id="now-lets-run-it-again" class="section level3">
-<h3>Now, let’s run it again</h3>
-</div>
-<div
-id="analyze-ridership-data-by-type-and-weekday.-here-i-find-the-average-ride-length-of-casual-riders-and-members-per-day."
-class="section level3">
-<h3>Analyze ridership data by type and weekday. Here I find the average
-ride length of casual riders and members per day.</h3>
-</div>
+<p>The summary function is a more compact way of getting the same
+information as above.</p>
+<pre class="r"><code>summary(all_trips_v2$ride_length)</code></pre>
+<p>Compare members and casual users</p>
+<pre class="r"><code>aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual, FUN = mean)
+aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual, FUN = median)
+aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual, FUN = max)
+aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual, FUN = min)</code></pre>
+<p>See the average ride time by each day for members vs casual users</p>
+<pre class="r"><code>aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual + all_trips_v2$day_of_week, FUN = mean)</code></pre>
+<p>Notice that the days of the week are out of order. Here, I sort
+them.</p>
+<pre class="r"><code>all_trips_v2$day_of_week &lt;- ordered(all_trips_v2$day_of_week, levels=c(&quot;Sunday&quot;, &quot;Monday&quot;, &quot;Tuesday&quot;, &quot;Wednesday&quot;, &quot;Thursday&quot;, &quot;Friday&quot;, &quot;Saturday&quot;))</code></pre>
+<p>Now, let’s run it again</p>
+<pre class="r"><code>x &lt;- aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual + all_trips_v2$day_of_week, FUN = mean)
+
+head(x)</code></pre>
+<p>Analyze ridership data by type and weekday. Here I find the average
+ride length of casual riders and members per day.</p>
+<pre class="r"><code>y &lt;- all_trips_v2 %&gt;% 
+  mutate(weekday = wday(started_at, label = TRUE)) %&gt;%  #creates weekday field using wday()
+  group_by(member_casual, weekday) %&gt;%  #groups by usertype and weekday
+  summarise(number_of_rides = n(),          #calculates the number of rides and average duration 
+  average_duration = mean(ride_length)) %&gt;%         # calculates the average duration
+  arrange(member_casual, weekday)       #sorts</code></pre>
+<pre class="r"><code>head(y)</code></pre>
 </div>
 <div id="step-5-visualizations" class="section level2">
 <h2>Step 5: Visualizations</h2>
-<div id="visualization-for-the-number-of-rides-by-rider-type"
-class="section level3">
-<h3>Visualization for the number of rides by rider type</h3>
+<p>Visualization for the number of rides by rider type</p>
+<pre class="r"><code>all_trips_v2 %&gt;% 
+  mutate(weekday = wday(started_at, label = TRUE)) %&gt;% 
+  group_by(member_casual, weekday) %&gt;% 
+  summarise(number_of_rides = n(), average_duration = mean(ride_length)) %&gt;% 
+  arrange(member_casual, weekday)  %&gt;% 
+  ggplot(aes(x = weekday, y = number_of_rides, fill = member_casual)) +
+  geom_col(position = &quot;dodge&quot;)</code></pre>
 <p><img src="Cyclistic-Case-Study_files/figure-html/unnamed-chunk-19-1.png" width="768" /></p>
-</div>
-<div id="visualization-for-average-duration-of-rides-by-rider-type"
-class="section level3">
-<h3>Visualization for average duration of rides by rider type</h3>
+<p>Visualization for average duration of rides by rider type</p>
+<pre class="r"><code>all_trips_v2 %&gt;% 
+  mutate(weekday = wday(started_at, label = TRUE)) %&gt;% 
+  group_by(member_casual, weekday) %&gt;% 
+  summarise(number_of_rides = n(), average_duration = mean(ride_length)) %&gt;% 
+  arrange(member_casual, weekday)  %&gt;% 
+  ggplot(aes(x = weekday, y = average_duration, fill = member_casual)) +
+  geom_col(position = &quot;dodge&quot;)</code></pre>
 <p><img src="Cyclistic-Case-Study_files/figure-html/unnamed-chunk-20-1.png" width="768" /></p>
-</div>
 </div>
 <div id="step-6-save-and-export" class="section level2">
 <h2>Step 6: Save and export</h2>
+<pre class="r"><code>write.csv(x, file = &quot;/Users/Devanshi/Desktop/avg_ride_length.csv&quot;)
+write.csv(y, file = &quot;/Users/Devanshi/Desktop/ride_length_summary_byday_member_casual.csv&quot;)</code></pre>
 </div>
 </div>
 

@@ -2,7 +2,7 @@
 title: "Cyclistic Case Study"
 output: 
   rmdformats::downcute:
-    self_contained: true
+     self_contained: true
 date: "2022-10-11"
 ---
 
@@ -23,9 +23,10 @@ opts_chunk$set(echo=FALSE,
                results="hide")
 opts_knit$set(width=75)
 ```
+
 ## Step 1: Loading Data
 
-### Install and load the packages for R. Then import all of the month's files for the past year.
+Install and load the packages for R. Then import all of the month's files for the past year.
 
 ```{r Load data, echo=TRUE, message=FALSE, warning=FALSE, results= 'hide'}
 
@@ -63,7 +64,7 @@ Sep22 <- read_csv("202209-divvy-publictripdata.csv")
 
 ## Step 2: Combine data
 
-### Compare column names of each file. I hid the results to limit clutter of the report's output.
+Compare column names of each file. I hid the results to limit clutter of the report's output.
 
 ```{r Combine data, echo=TRUE, message=FALSE, warning=FALSE, results = 'hide'}
 colnames(Oct21)
@@ -80,13 +81,13 @@ colnames(Aug22)
 colnames(Sep22)
 ```
 
-### Inspect the data frame
+Inspect the data frame
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
 str(Oct21)
 ```
 
-### Stack individual month's data frames into one big data frame. I commented out the view of the data to limit clutter.
+Stack individual month's data frames into one big data frame. I commented out the view of the data to limit clutter.
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
 all_trips <- bind_rows(Oct21,Nov21, Dec21, Jan22, Feb22, Mar22, Apr22, May22, Jun22, Jul22, Aug22, Sep22)
@@ -97,7 +98,7 @@ all_trips <- bind_rows(Oct21,Nov21, Dec21, Jan22, Feb22, Mar22, Apr22, May22, Ju
 
 ## Step 3: Data Cleaning
 
-### Inspect the new table that has been created
+Inspect the new table that has been created
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
 colnames(all_trips)  #List of column names
@@ -109,7 +110,7 @@ summary(all_trips)  #Statistical summary of data. Mainly for numerics
 
 ```
 
-### Added some additional columns of data, such as day, month, year, that provide additional opportunities to aggregate the data.
+Added some additional columns of data, such as day, month, year, that provide additional opportunities to aggregate the data.
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
 all_trips$date <- as.Date(all_trips$started_at) #The default format is yyyy-mm-dd
@@ -121,30 +122,30 @@ all_trips$day_of_week <- format(as.Date(all_trips$date), "%A")
 
 ```
 
-### Add a "ride_length" calculation to all_trips (in seconds)
+Add a "ride_length" calculation to all_trips (in seconds)
 
-```{r}
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
 all_trips$ride_length <- difftime(all_trips$ended_at,all_trips$started_at)
 ```
 
-### Inspect the structure of the columns
+Inspect the structure of the columns
 
-```{r}
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
 str(all_trips)
 ```
 
-### Convert "ride_length" to numeric so we can run calculations on the data. First let's check to see if the ride_length's column's type is numeric.
+Convert "ride_length" to numeric so we can run calculations on the data. First let's check to see if the ride_length's column's type is numeric.
 
-```{r}
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
 is.numeric(all_trips$ride_length)
 
 all_trips$ride_length <- as.numeric(as.character(all_trips$ride_length))
 is.numeric(all_trips$ride_length)
 ```
 
-### The data frame includes a few hundred entries when bikes were taken out of docks and checked for quality by Divvy or ride_length was negative. Here I find negative ride lengths. I have commented out the view of the data to limit the clutter of the report.
+The data frame includes a few hundred entries when bikes were taken out of docks and checked for quality by Divvy or ride_length was negative. Here I find negative ride lengths. I have commented out the view of the data to limit the clutter of the report.
 
-```{r}
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
 all_trips[all_trips$ride_length<0, ]
 
 #View(all_trips[all_trips$ride_length<0, ])
@@ -153,10 +154,10 @@ nrow(all_trips[all_trips$ride_length<0, ])
 
 ```
 
-### As you can see, there are 108 instances where the ride lengths have been negative seconds. I will delete these instances. I will create a new version of the data frame (v2) since data is being removed. Again, commenting out the view of the whole data frame.
+As you can see, there are 108 instances where the ride lengths have been negative seconds. I will delete these instances. I will create a new version of the data frame (v2) since data is being removed. Again, commenting out the view of the whole data frame.
 
-```{r}
-all_trips_v2 <- all_trips[!(all_trips$ride_length<0),]
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+all_trips_v2 <- all_trips[!(all_trips$ride_length<0), ]
 
 #View(all_trips_v2)
 
@@ -164,7 +165,7 @@ all_trips_v2 <- all_trips[!(all_trips$ride_length<0),]
 
 ## Step 4: Analysis
 
-### Descriptive analysis on ride_length (all figures in seconds). I hid the results of the following code chunk.
+Descriptive analysis on ride_length (all figures in seconds). I hid the results of the following code chunk.
 
 ```{r echo=TRUE, results = 'hide'}
 mean(all_trips_v2$ride_length) #straight average (total ride length / rides)
@@ -174,15 +175,15 @@ min(all_trips_v2$ride_length) #shortest ride
 
 ```
 
-### The summary function is a more compact way of getting the same information as above.
+The summary function is a more compact way of getting the same information as above.
 
-```{r}
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
 summary(all_trips_v2$ride_length)
 ```
 
-### Compare members and casual users
+Compare members and casual users
 
-```{r}
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
 aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual, FUN = mean)
 aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual, FUN = median)
 aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual, FUN = max)
@@ -190,31 +191,31 @@ aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual, FUN = min)
 
 ```
 
-### See the average ride time by each day for members vs casual users
+See the average ride time by each day for members vs casual users
 
-```{r}
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
 aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual + all_trips_v2$day_of_week, FUN = mean)
 
 ```
 
-### Notice that the days of the week are out of order. Here, I sort them.
+Notice that the days of the week are out of order. Here, I sort them.
 
-```{r}
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
 all_trips_v2$day_of_week <- ordered(all_trips_v2$day_of_week, levels=c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"))
 ```
 
-### Now, let's run it again
+Now, let's run it again
 
-```{r}
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
 x <- aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual + all_trips_v2$day_of_week, FUN = mean)
 
 head(x)
 
 ```
 
-### Analyze ridership data by type and weekday. Here I find the average ride length of casual riders and members per day.
+Analyze ridership data by type and weekday. Here I find the average ride length of casual riders and members per day.
 
-```{r message=FALSE, warning=FALSE, paged.print=FALSE, results= 'hide'}
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE, results= 'hide'}
 y <- all_trips_v2 %>% 
   mutate(weekday = wday(started_at, label = TRUE)) %>%  #creates weekday field using wday()
   group_by(member_casual, weekday) %>%  #groups by usertype and weekday
@@ -223,15 +224,15 @@ y <- all_trips_v2 %>%
   arrange(member_casual, weekday)	    #sorts
 ```
 
-```{r}
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
 head(y)
 ```
 
 ## Step 5: Visualizations
 
-### Visualization for the number of rides by rider type
+Visualization for the number of rides by rider type
 
-```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
 all_trips_v2 %>% 
   mutate(weekday = wday(started_at, label = TRUE)) %>% 
   group_by(member_casual, weekday) %>% 
@@ -242,9 +243,9 @@ all_trips_v2 %>%
 
 ```
 
-### Visualization for average duration of rides by rider type
+Visualization for average duration of rides by rider type
 
-```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
 all_trips_v2 %>% 
   mutate(weekday = wday(started_at, label = TRUE)) %>% 
   group_by(member_casual, weekday) %>% 
@@ -257,7 +258,7 @@ all_trips_v2 %>%
 
 ## Step 6: Save and export
 
-```{r}
+```{r echo=TRUE}
 write.csv(x, file = "/Users/Devanshi/Desktop/avg_ride_length.csv")
 write.csv(y, file = "/Users/Devanshi/Desktop/ride_length_summary_byday_member_casual.csv")
 
