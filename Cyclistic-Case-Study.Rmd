@@ -1,8 +1,6 @@
 ---
 title: "Cyclistic Case Study"
-output: 
-  rmdformats::downcute:
-     self_contained: true
+output: html_document
 date: "2022-10-11"
 ---
 

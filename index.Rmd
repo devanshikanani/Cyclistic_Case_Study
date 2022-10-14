@@ -2,9 +2,7 @@
 title: <br>
   Cyclistic Case Study
 
-output:
-  rmdformats::downcute:
-    self_contained: true
+output:   html_document
 ---
 
 ```{r setup, include=FALSE}
