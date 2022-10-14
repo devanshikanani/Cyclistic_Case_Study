@@ -8,19 +8,7 @@ date: "2022-10-11"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r, include=FALSE}
-library(knitr)
-library(rmdformats)
-## Global options
-options(max.print="75")
-opts_chunk$set(echo=FALSE,
-               prompt=FALSE,
-               comment=NA,
-               message=FALSE,
-               warning=FALSE, 
-               results="hide")
-opts_knit$set(width=75)
-```
+
 
 ## Step 1: Loading Data
 

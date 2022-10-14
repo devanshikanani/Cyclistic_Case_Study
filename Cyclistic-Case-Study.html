@@ -319,6 +319,37 @@ colnames(Aug22)
 colnames(Sep22)</code></pre>
 <p>Inspect the data frame</p>
 <pre class="r"><code>str(Oct21)</code></pre>
+<pre><code>## spec_tbl_df [631,226 × 13] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+##  $ ride_id           : chr [1:631226] &quot;620BC6107255BF4C&quot; &quot;4471C70731AB2E45&quot; &quot;26CA69D43D15EE14&quot; &quot;362947F0437E1514&quot; ...
+##  $ rideable_type     : chr [1:631226] &quot;electric_bike&quot; &quot;electric_bike&quot; &quot;electric_bike&quot; &quot;electric_bike&quot; ...
+##  $ started_at        : POSIXct[1:631226], format: &quot;2021-10-22 12:46:42&quot; &quot;2021-10-21 09:12:37&quot; ...
+##  $ ended_at          : POSIXct[1:631226], format: &quot;2021-10-22 12:49:50&quot; &quot;2021-10-21 09:14:14&quot; ...
+##  $ start_station_name: chr [1:631226] &quot;Kingsbury St &amp; Kinzie St&quot; NA NA NA ...
+##  $ start_station_id  : chr [1:631226] &quot;KA1503000043&quot; NA NA NA ...
+##  $ end_station_name  : chr [1:631226] NA NA NA NA ...
+##  $ end_station_id    : chr [1:631226] NA NA NA NA ...
+##  $ start_lat         : num [1:631226] 41.9 41.9 41.9 41.9 41.9 ...
+##  $ start_lng         : num [1:631226] -87.6 -87.7 -87.7 -87.7 -87.7 ...
+##  $ end_lat           : num [1:631226] 41.9 41.9 41.9 41.9 41.9 ...
+##  $ end_lng           : num [1:631226] -87.6 -87.7 -87.7 -87.7 -87.7 ...
+##  $ member_casual     : chr [1:631226] &quot;member&quot; &quot;member&quot; &quot;member&quot; &quot;member&quot; ...
+##  - attr(*, &quot;spec&quot;)=
+##   .. cols(
+##   ..   ride_id = col_character(),
+##   ..   rideable_type = col_character(),
+##   ..   started_at = col_datetime(format = &quot;&quot;),
+##   ..   ended_at = col_datetime(format = &quot;&quot;),
+##   ..   start_station_name = col_character(),
+##   ..   start_station_id = col_character(),
+##   ..   end_station_name = col_character(),
+##   ..   end_station_id = col_character(),
+##   ..   start_lat = col_double(),
+##   ..   start_lng = col_double(),
+##   ..   end_lat = col_double(),
+##   ..   end_lng = col_double(),
+##   ..   member_casual = col_character()
+##   .. )
+##  - attr(*, &quot;problems&quot;)=&lt;externalptr&gt;</code></pre>
 <p>Stack individual month’s data frames into one big data frame. I
 commented out the view of the data to limit clutter.</p>
 <pre class="r"><code>all_trips &lt;- bind_rows(Oct21,Nov21, Dec21, Jan22, Feb22, Mar22, Apr22, May22, Jun22, Jul22, Aug22, Sep22)
@@ -328,12 +359,96 @@ commented out the view of the data to limit clutter.</p>
 <div id="step-3-data-cleaning" class="section level2">
 <h2>Step 3: Data Cleaning</h2>
 <p>Inspect the new table that has been created</p>
-<pre class="r"><code>colnames(all_trips)  #List of column names
-nrow(all_trips)  #How many rows are in data frame?
-dim(all_trips)  #Dimensions of the data frame?
-head(all_trips)  #See the first 6 rows of data frame.  Also tail(all_trips)
-str(all_trips)  #See list of columns and data types (numeric, character, etc)
-summary(all_trips)  #Statistical summary of data. Mainly for numerics</code></pre>
+<pre class="r"><code>colnames(all_trips)  #List of column names</code></pre>
+<pre><code>##  [1] &quot;ride_id&quot;            &quot;rideable_type&quot;      &quot;started_at&quot;        
+##  [4] &quot;ended_at&quot;           &quot;start_station_name&quot; &quot;start_station_id&quot;  
+##  [7] &quot;end_station_name&quot;   &quot;end_station_id&quot;     &quot;start_lat&quot;         
+## [10] &quot;start_lng&quot;          &quot;end_lat&quot;            &quot;end_lng&quot;           
+## [13] &quot;member_casual&quot;</code></pre>
+<pre class="r"><code>nrow(all_trips)  #How many rows are in data frame?</code></pre>
+<pre><code>## [1] 5828235</code></pre>
+<pre class="r"><code>dim(all_trips)  #Dimensions of the data frame?</code></pre>
+<pre><code>## [1] 5828235      13</code></pre>
+<pre class="r"><code>head(all_trips)  #See the first 6 rows of data frame.  Also tail(all_trips)</code></pre>
+<pre><code>## # A tibble: 6 × 13
+##   ride_id        ridea…¹ started_at          ended_at            start…² start…³
+##   &lt;chr&gt;          &lt;chr&gt;   &lt;dttm&gt;              &lt;dttm&gt;              &lt;chr&gt;   &lt;chr&gt;  
+## 1 620BC6107255B… electr… 2021-10-22 12:46:42 2021-10-22 12:49:50 Kingsb… KA1503…
+## 2 4471C70731AB2… electr… 2021-10-21 09:12:37 2021-10-21 09:14:14 &lt;NA&gt;    &lt;NA&gt;   
+## 3 26CA69D43D15E… electr… 2021-10-16 16:28:39 2021-10-16 16:36:26 &lt;NA&gt;    &lt;NA&gt;   
+## 4 362947F0437E1… electr… 2021-10-16 16:17:48 2021-10-16 16:19:03 &lt;NA&gt;    &lt;NA&gt;   
+## 5 BB731DE2F2EC5… electr… 2021-10-20 23:17:54 2021-10-20 23:26:10 &lt;NA&gt;    &lt;NA&gt;   
+## 6 7176307BBC097… electr… 2021-10-21 16:57:37 2021-10-21 17:11:58 &lt;NA&gt;    &lt;NA&gt;   
+## # … with 7 more variables: end_station_name &lt;chr&gt;, end_station_id &lt;chr&gt;,
+## #   start_lat &lt;dbl&gt;, start_lng &lt;dbl&gt;, end_lat &lt;dbl&gt;, end_lng &lt;dbl&gt;,
+## #   member_casual &lt;chr&gt;, and abbreviated variable names ¹​rideable_type,
+## #   ²​start_station_name, ³​start_station_id
+## # ℹ Use `colnames()` to see all variable names</code></pre>
+<pre class="r"><code>str(all_trips)  #See list of columns and data types (numeric, character, etc)</code></pre>
+<pre><code>## spec_tbl_df [5,828,235 × 13] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+##  $ ride_id           : chr [1:5828235] &quot;620BC6107255BF4C&quot; &quot;4471C70731AB2E45&quot; &quot;26CA69D43D15EE14&quot; &quot;362947F0437E1514&quot; ...
+##  $ rideable_type     : chr [1:5828235] &quot;electric_bike&quot; &quot;electric_bike&quot; &quot;electric_bike&quot; &quot;electric_bike&quot; ...
+##  $ started_at        : POSIXct[1:5828235], format: &quot;2021-10-22 12:46:42&quot; &quot;2021-10-21 09:12:37&quot; ...
+##  $ ended_at          : POSIXct[1:5828235], format: &quot;2021-10-22 12:49:50&quot; &quot;2021-10-21 09:14:14&quot; ...
+##  $ start_station_name: chr [1:5828235] &quot;Kingsbury St &amp; Kinzie St&quot; NA NA NA ...
+##  $ start_station_id  : chr [1:5828235] &quot;KA1503000043&quot; NA NA NA ...
+##  $ end_station_name  : chr [1:5828235] NA NA NA NA ...
+##  $ end_station_id    : chr [1:5828235] NA NA NA NA ...
+##  $ start_lat         : num [1:5828235] 41.9 41.9 41.9 41.9 41.9 ...
+##  $ start_lng         : num [1:5828235] -87.6 -87.7 -87.7 -87.7 -87.7 ...
+##  $ end_lat           : num [1:5828235] 41.9 41.9 41.9 41.9 41.9 ...
+##  $ end_lng           : num [1:5828235] -87.6 -87.7 -87.7 -87.7 -87.7 ...
+##  $ member_casual     : chr [1:5828235] &quot;member&quot; &quot;member&quot; &quot;member&quot; &quot;member&quot; ...
+##  - attr(*, &quot;spec&quot;)=
+##   .. cols(
+##   ..   ride_id = col_character(),
+##   ..   rideable_type = col_character(),
+##   ..   started_at = col_datetime(format = &quot;&quot;),
+##   ..   ended_at = col_datetime(format = &quot;&quot;),
+##   ..   start_station_name = col_character(),
+##   ..   start_station_id = col_character(),
+##   ..   end_station_name = col_character(),
+##   ..   end_station_id = col_character(),
+##   ..   start_lat = col_double(),
+##   ..   start_lng = col_double(),
+##   ..   end_lat = col_double(),
+##   ..   end_lng = col_double(),
+##   ..   member_casual = col_character()
+##   .. )
+##  - attr(*, &quot;problems&quot;)=&lt;externalptr&gt;</code></pre>
+<pre class="r"><code>summary(all_trips)  #Statistical summary of data. Mainly for numerics</code></pre>
+<pre><code>##    ride_id          rideable_type        started_at                    
+##  Length:5828235     Length:5828235     Min.   :2021-10-01 00:00:09.00  
+##  Class :character   Class :character   1st Qu.:2022-02-28 19:21:08.50  
+##  Mode  :character   Mode  :character   Median :2022-06-08 06:41:28.00  
+##                                        Mean   :2022-05-06 21:39:18.18  
+##                                        3rd Qu.:2022-08-02 11:26:01.00  
+##                                        Max.   :2022-09-30 23:59:56.00  
+##                                                                        
+##     ended_at                     start_station_name start_station_id  
+##  Min.   :2021-10-01 00:03:11.0   Length:5828235     Length:5828235    
+##  1st Qu.:2022-02-28 19:34:02.5   Class :character   Class :character  
+##  Median :2022-06-08 06:55:07.0   Mode  :character   Mode  :character  
+##  Mean   :2022-05-06 21:58:54.2                                        
+##  3rd Qu.:2022-08-02 11:46:26.0                                        
+##  Max.   :2022-10-05 19:53:11.0                                        
+##                                                                       
+##  end_station_name   end_station_id       start_lat       start_lng     
+##  Length:5828235     Length:5828235     Min.   :41.64   Min.   :-87.84  
+##  Class :character   Class :character   1st Qu.:41.88   1st Qu.:-87.66  
+##  Mode  :character   Mode  :character   Median :41.90   Median :-87.64  
+##                                        Mean   :41.90   Mean   :-87.65  
+##                                        3rd Qu.:41.93   3rd Qu.:-87.63  
+##                                        Max.   :45.64   Max.   :-73.80  
+##                                                                        
+##     end_lat         end_lng       member_casual     
+##  Min.   :41.39   Min.   :-88.97   Length:5828235    
+##  1st Qu.:41.88   1st Qu.:-87.66   Class :character  
+##  Median :41.90   Median :-87.64   Mode  :character  
+##  Mean   :41.90   Mean   :-87.65                     
+##  3rd Qu.:41.93   3rd Qu.:-87.63                     
+##  Max.   :42.37   Max.   :-87.30                     
+##  NA&#39;s   :5844    NA&#39;s   :5844</code></pre>
 <p>Added some additional columns of data, such as day, month, year, that
 provide additional opportunities to aggregate the data.</p>
 <pre class="r"><code>all_trips$date &lt;- as.Date(all_trips$started_at) #The default format is yyyy-mm-dd
@@ -345,22 +460,80 @@ all_trips$day_of_week &lt;- format(as.Date(all_trips$date), &quot;%A&quot;)</cod
 <pre class="r"><code>all_trips$ride_length &lt;- difftime(all_trips$ended_at,all_trips$started_at)</code></pre>
 <p>Inspect the structure of the columns</p>
 <pre class="r"><code>str(all_trips)</code></pre>
+<pre><code>## spec_tbl_df [5,828,235 × 19] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+##  $ ride_id           : chr [1:5828235] &quot;620BC6107255BF4C&quot; &quot;4471C70731AB2E45&quot; &quot;26CA69D43D15EE14&quot; &quot;362947F0437E1514&quot; ...
+##  $ rideable_type     : chr [1:5828235] &quot;electric_bike&quot; &quot;electric_bike&quot; &quot;electric_bike&quot; &quot;electric_bike&quot; ...
+##  $ started_at        : POSIXct[1:5828235], format: &quot;2021-10-22 12:46:42&quot; &quot;2021-10-21 09:12:37&quot; ...
+##  $ ended_at          : POSIXct[1:5828235], format: &quot;2021-10-22 12:49:50&quot; &quot;2021-10-21 09:14:14&quot; ...
+##  $ start_station_name: chr [1:5828235] &quot;Kingsbury St &amp; Kinzie St&quot; NA NA NA ...
+##  $ start_station_id  : chr [1:5828235] &quot;KA1503000043&quot; NA NA NA ...
+##  $ end_station_name  : chr [1:5828235] NA NA NA NA ...
+##  $ end_station_id    : chr [1:5828235] NA NA NA NA ...
+##  $ start_lat         : num [1:5828235] 41.9 41.9 41.9 41.9 41.9 ...
+##  $ start_lng         : num [1:5828235] -87.6 -87.7 -87.7 -87.7 -87.7 ...
+##  $ end_lat           : num [1:5828235] 41.9 41.9 41.9 41.9 41.9 ...
+##  $ end_lng           : num [1:5828235] -87.6 -87.7 -87.7 -87.7 -87.7 ...
+##  $ member_casual     : chr [1:5828235] &quot;member&quot; &quot;member&quot; &quot;member&quot; &quot;member&quot; ...
+##  $ date              : Date[1:5828235], format: &quot;2021-10-22&quot; &quot;2021-10-21&quot; ...
+##  $ month             : chr [1:5828235] &quot;10&quot; &quot;10&quot; &quot;10&quot; &quot;10&quot; ...
+##  $ day               : chr [1:5828235] &quot;22&quot; &quot;21&quot; &quot;16&quot; &quot;16&quot; ...
+##  $ year              : chr [1:5828235] &quot;2021&quot; &quot;2021&quot; &quot;2021&quot; &quot;2021&quot; ...
+##  $ day_of_week       : chr [1:5828235] &quot;Friday&quot; &quot;Thursday&quot; &quot;Saturday&quot; &quot;Saturday&quot; ...
+##  $ ride_length       : &#39;difftime&#39; num [1:5828235] 188 97 467 75 ...
+##   ..- attr(*, &quot;units&quot;)= chr &quot;secs&quot;
+##  - attr(*, &quot;spec&quot;)=
+##   .. cols(
+##   ..   ride_id = col_character(),
+##   ..   rideable_type = col_character(),
+##   ..   started_at = col_datetime(format = &quot;&quot;),
+##   ..   ended_at = col_datetime(format = &quot;&quot;),
+##   ..   start_station_name = col_character(),
+##   ..   start_station_id = col_character(),
+##   ..   end_station_name = col_character(),
+##   ..   end_station_id = col_character(),
+##   ..   start_lat = col_double(),
+##   ..   start_lng = col_double(),
+##   ..   end_lat = col_double(),
+##   ..   end_lng = col_double(),
+##   ..   member_casual = col_character()
+##   .. )
+##  - attr(*, &quot;problems&quot;)=&lt;externalptr&gt;</code></pre>
 <p>Convert “ride_length” to numeric so we can run calculations on the
 data. First let’s check to see if the ride_length’s column’s type is
 numeric.</p>
-<pre class="r"><code>is.numeric(all_trips$ride_length)
-
-all_trips$ride_length &lt;- as.numeric(as.character(all_trips$ride_length))
+<pre class="r"><code>is.numeric(all_trips$ride_length)</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<pre class="r"><code>all_trips$ride_length &lt;- as.numeric(as.character(all_trips$ride_length))
 is.numeric(all_trips$ride_length)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
 <p>The data frame includes a few hundred entries when bikes were taken
 out of docks and checked for quality by Divvy or ride_length was
 negative. Here I find negative ride lengths. I have commented out the
 view of the data to limit the clutter of the report.</p>
-<pre class="r"><code>all_trips[all_trips$ride_length&lt;0, ]
-
-#View(all_trips[all_trips$ride_length&lt;0, ])
+<pre class="r"><code>all_trips[all_trips$ride_length&lt;0, ]</code></pre>
+<pre><code>## # A tibble: 108 × 19
+##    ride_id       ridea…¹ started_at          ended_at            start…² start…³
+##    &lt;chr&gt;         &lt;chr&gt;   &lt;dttm&gt;              &lt;dttm&gt;              &lt;chr&gt;   &lt;chr&gt;  
+##  1 B029250A1EFF… docked… 2021-11-07 01:40:02 2021-11-07 01:05:46 Halste… 13192  
+##  2 D631251FA9C7… classi… 2021-11-07 01:52:53 2021-11-07 01:05:22 Clark … 632    
+##  3 021DC77C70A3… classi… 2021-11-07 01:40:13 2021-11-07 01:00:29 New St… TA1306…
+##  4 235ACD294AFB… electr… 2021-11-07 01:34:03 2021-11-07 01:17:13 Sherid… TA1309…
+##  5 6A2DCA5CB159… classi… 2021-11-07 01:54:25 2021-11-07 01:03:44 Frankl… RN-    
+##  6 E89DD4EBFBD2… classi… 2021-11-07 01:54:04 2021-11-07 01:25:57 Orlean… 636    
+##  7 0006AA1377F8… classi… 2021-11-07 01:51:52 2021-11-07 01:22:53 Orlean… 636    
+##  8 83B6C6B10248… classi… 2021-11-07 01:54:12 2021-11-07 01:05:09 Clinto… 13021  
+##  9 FFD5A2DDE1FA… classi… 2021-11-07 01:54:36 2021-11-07 01:03:11 State … TA1305…
+## 10 5132D82DCD66… electr… 2021-11-07 01:51:21 2021-11-07 01:07:59 N Gree… 20246.0
+## # … with 98 more rows, 13 more variables: end_station_name &lt;chr&gt;,
+## #   end_station_id &lt;chr&gt;, start_lat &lt;dbl&gt;, start_lng &lt;dbl&gt;, end_lat &lt;dbl&gt;,
+## #   end_lng &lt;dbl&gt;, member_casual &lt;chr&gt;, date &lt;date&gt;, month &lt;chr&gt;, day &lt;chr&gt;,
+## #   year &lt;chr&gt;, day_of_week &lt;chr&gt;, ride_length &lt;dbl&gt;, and abbreviated variable
+## #   names ¹​rideable_type, ²​start_station_name, ³​start_station_id
+## # ℹ Use `print(n = ...)` to see more rows, and `colnames()` to see all variable names</code></pre>
+<pre class="r"><code>#View(all_trips[all_trips$ride_length&lt;0, ])
 
 nrow(all_trips[all_trips$ride_length&lt;0, ])</code></pre>
+<pre><code>## [1] 108</code></pre>
 <p>As you can see, there are 108 instances where the ride lengths have
 been negative seconds. I will delete these instances. I will create a
 new version of the data frame (v2) since data is being removed. Again,
@@ -380,13 +553,42 @@ min(all_trips_v2$ride_length) #shortest ride</code></pre>
 <p>The summary function is a more compact way of getting the same
 information as above.</p>
 <pre class="r"><code>summary(all_trips_v2$ride_length)</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##       0     356     629    1176    1131 2442301</code></pre>
 <p>Compare members and casual users</p>
-<pre class="r"><code>aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual, FUN = mean)
-aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual, FUN = median)
-aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual, FUN = max)
-aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual, FUN = min)</code></pre>
+<pre class="r"><code>aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual, FUN = mean)</code></pre>
+<pre><code>##   all_trips_v2$member_casual all_trips_v2$ride_length
+## 1                     casual                1761.6450
+## 2                     member                 766.1175</code></pre>
+<pre class="r"><code>aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual, FUN = median)</code></pre>
+<pre><code>##   all_trips_v2$member_casual all_trips_v2$ride_length
+## 1                     casual                      807
+## 2                     member                      533</code></pre>
+<pre class="r"><code>aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual, FUN = max)</code></pre>
+<pre><code>##   all_trips_v2$member_casual all_trips_v2$ride_length
+## 1                     casual                  2442301
+## 2                     member                    93594</code></pre>
+<pre class="r"><code>aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual, FUN = min)</code></pre>
+<pre><code>##   all_trips_v2$member_casual all_trips_v2$ride_length
+## 1                     casual                        0
+## 2                     member                        0</code></pre>
 <p>See the average ride time by each day for members vs casual users</p>
 <pre class="r"><code>aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual + all_trips_v2$day_of_week, FUN = mean)</code></pre>
+<pre><code>##    all_trips_v2$member_casual all_trips_v2$day_of_week all_trips_v2$ride_length
+## 1                      casual                   Friday                1680.6606
+## 2                      member                   Friday                 751.7054
+## 3                      casual                   Monday                1783.7004
+## 4                      member                   Monday                 739.6565
+## 5                      casual                 Saturday                1962.5317
+## 6                      member                 Saturday                 855.8207
+## 7                      casual                   Sunday                2061.8737
+## 8                      member                   Sunday                 852.8695
+## 9                      casual                 Thursday                1540.7802
+## 10                     member                 Thursday                 737.6436
+## 11                     casual                  Tuesday                1548.5476
+## 12                     member                  Tuesday                 729.7824
+## 13                     casual                Wednesday                1502.0471
+## 14                     member                Wednesday                 727.3683</code></pre>
 <p>Notice that the days of the week are out of order. Here, I sort
 them.</p>
 <pre class="r"><code>all_trips_v2$day_of_week &lt;- ordered(all_trips_v2$day_of_week, levels=c(&quot;Sunday&quot;, &quot;Monday&quot;, &quot;Tuesday&quot;, &quot;Wednesday&quot;, &quot;Thursday&quot;, &quot;Friday&quot;, &quot;Saturday&quot;))</code></pre>
@@ -394,6 +596,13 @@ them.</p>
 <pre class="r"><code>x &lt;- aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual + all_trips_v2$day_of_week, FUN = mean)
 
 head(x)</code></pre>
+<pre><code>##   all_trips_v2$member_casual all_trips_v2$day_of_week all_trips_v2$ride_length
+## 1                     casual                   Sunday                2061.8737
+## 2                     member                   Sunday                 852.8695
+## 3                     casual                   Monday                1783.7004
+## 4                     member                   Monday                 739.6565
+## 5                     casual                  Tuesday                1548.5476
+## 6                     member                  Tuesday                 729.7824</code></pre>
 <p>Analyze ridership data by type and weekday. Here I find the average
 ride length of casual riders and members per day.</p>
 <pre class="r"><code>y &lt;- all_trips_v2 %&gt;% 
@@ -403,6 +612,16 @@ ride length of casual riders and members per day.</p>
   average_duration = mean(ride_length)) %&gt;%         # calculates the average duration
   arrange(member_casual, weekday)       #sorts</code></pre>
 <pre class="r"><code>head(y)</code></pre>
+<pre><code>## # A tibble: 6 × 4
+## # Groups:   member_casual [1]
+##   member_casual weekday number_of_rides average_duration
+##   &lt;chr&gt;         &lt;ord&gt;             &lt;int&gt;            &lt;dbl&gt;
+## 1 casual        Sun              405009            2062.
+## 2 casual        Mon              279785            1784.
+## 3 casual        Tue              275772            1549.
+## 4 casual        Wed              281660            1502.
+## 5 casual        Thu              306691            1541.
+## 6 casual        Fri              352508            1681.</code></pre>
 </div>
 <div id="step-5-visualizations" class="section level2">
 <h2>Step 5: Visualizations</h2>
@@ -414,7 +633,7 @@ ride length of casual riders and members per day.</p>
   arrange(member_casual, weekday)  %&gt;% 
   ggplot(aes(x = weekday, y = number_of_rides, fill = member_casual)) +
   geom_col(position = &quot;dodge&quot;)</code></pre>
-<p><img src="Cyclistic-Case-Study_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p><img src="Cyclistic-Case-Study_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
 <p>Visualization for average duration of rides by rider type</p>
 <pre class="r"><code>all_trips_v2 %&gt;% 
   mutate(weekday = wday(started_at, label = TRUE)) %&gt;% 
@@ -423,7 +642,7 @@ ride length of casual riders and members per day.</p>
   arrange(member_casual, weekday)  %&gt;% 
   ggplot(aes(x = weekday, y = average_duration, fill = member_casual)) +
   geom_col(position = &quot;dodge&quot;)</code></pre>
-<p><img src="Cyclistic-Case-Study_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<p><img src="Cyclistic-Case-Study_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
 </div>
 <div id="step-6-save-and-export" class="section level2">
 <h2>Step 6: Save and export</h2>

@@ -2,23 +2,8 @@
 title: <br>
   Cyclistic Case Study
 
-output:   html_document
+output: html_document
 ---
-
-```{r setup, include=FALSE}
-library(knitr)
-library(rmdformats)
-
-## Global options
-options(max.print="75")
-opts_chunk$set(echo=FALSE,
-               prompt=FALSE,
-               comment=NA,
-               message=FALSE,
-               warning=FALSE, 
-               results="hide")
-opts_knit$set(width=75)
-```
 
 #### Summary:
 
